@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { Table, TableHeader, TableBody, TableRow, TableHead } from '@/components/ui/table'
 interface Product {
     id: number;
     name: string;
