@@ -2,8 +2,9 @@ import {Link} from 'react-router-dom';
 //importamos el logo
 import logo_2 from "../../assets/logo_2.png";
 import { Power } from "lucide-react";
+import {useLogin} from '@/modules/login/hooks/useLogin';
 const logout=()=>{
- console.log("saliendo, aqui eliminamos el token etc")
+ useLogin().logout();
 }
 export const Sidebar=()=>{
     return(
@@ -30,6 +31,9 @@ export const Sidebar=()=>{
         </Link>
         <Link to="/users" className="px-3 py-2 rounded hover:bg-pink-600 transition text-black text-lg font-bold">
           Usuarios
+        </Link>
+         <Link to="/users-product" className="px-3 py-2 rounded hover:bg-pink-600 transition text-black text-lg font-bold">
+          User Products
         </Link>
         <Link to="/"  onClick={logout} className="px-3 py-2  mt-auto rounded hover:bg-red-100 transition text-red-600 font-bold">
          <div className="flex"> Cerrar Sesión

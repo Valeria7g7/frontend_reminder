@@ -1,5 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 import type { ISessionProfile, AuthTokens, PersistedSession, SessionState } from '@/core/interfaces/session.interface';
+import { persist } from 'zustand/middleware';
+
 const STORAGE_KEY = 'session';
 
 const readPersistedState = (): PersistedSession => {
@@ -47,6 +49,58 @@ const clearPersistedState = () => {
   }
 };
 
+export const sessionStore = createStore<SessionState>()(
+  persist(
+    (set) => ({
+      profile: null,
+      token: null,
+      isAuthenticated: false,
+      isRestoring: false,
+
+      setSession: ({ profile, token }) =>
+        set({
+          profile,
+          token,
+          isAuthenticated: true,
+          isRestoring: false,
+        }),
+
+      setProfile: (profile) =>
+        set((state) => ({
+          profile,
+          token: state.token,
+          isAuthenticated: Boolean(state.token),
+          isRestoring: false,
+        })),
+
+      clearSession: () =>
+        set({
+          profile: null,
+          token: null,
+          isAuthenticated: false,
+          isRestoring: false,
+        }),
+
+      logout: ({ propagate } = { propagate: true }) => {
+        localStorage.removeItem(`session`);
+        set({
+          profile: null,
+          token: null,
+          isAuthenticated: false,
+          isRestoring: false,
+        });
+
+        if (propagate && typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+      },
+    }),
+    {
+      name: 'session',
+    }
+  )
+);
+/* 
 export const sessionStore = createStore<SessionState>((set) => ({
   profile: null,
   token: null,
@@ -88,4 +142,4 @@ export const sessionStore = createStore<SessionState>((set) => ({
       window.location.href = '/login';
     }
   },
-}));
+})); */

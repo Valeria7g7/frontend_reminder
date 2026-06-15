@@ -21,6 +21,8 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const token = sessionStore.getState().token?.accessToken;
+  console.log("token", token);
+  console.log("State session", sessionStore.getState());
   if (token) {
     config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;

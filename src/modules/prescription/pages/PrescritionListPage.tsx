@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { UserCreate } from '../components/UserCreate';
+import { PrescriptionCreate } from '../components/PrescriptionCreate';
 import { Actions } from '@/interfaces/general.interface';
-import { useUserStore } from '../store/user.store';
-import { useUsersList } from '../hooks/useUsersList';
+import { usePrescriptionStore } from '../store/prescription.store';
+import { usePrescriptionsList } from '../hooks/usePrescriptionList';
 //import { TableActions } from '@/core/genericComponents/TableActions';
 import { TableActions } from '@/core/genericComponents/TableActions';
-import type { IUser } from '../interface/User.interface';
-import { UserResource } from '../resources/User.resource';
+import type { IPrescription } from '../interface/Prescription.interface';
+import { PrescriptionResource } from '../resources/Prescription.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
 import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
-export default function UserListPage() {
-    const { onSearch, } = useUsersList();
-    const entities = useUserStore((state) => state.entities);
-    const isLoading = useUserStore((state) => state.isLoading);
+export default function PrescriptionListPage() {
+    const { onSearch, } = usePrescriptionsList();
+    const entities = usePrescriptionStore((state) => state.entities);
+    const isLoading = usePrescriptionStore((state) => state.isLoading);
 
 
-    const deleteEntity = useUserStore((state) => state.deleteEntity);
+    const deleteEntity = usePrescriptionStore((state) => state.deleteEntity);
 
 
     const [showModalNew, setShowNew] = useState(false);
@@ -23,10 +23,10 @@ export default function UserListPage() {
 
     //para mandar el mode
     const [mode, setMode] = useState<string>(Actions.CREATE);
-    const [entity, setEntity] = useState<IUser | undefined>(undefined);
+    const [entity, setEntity] = useState<IPrescription | undefined>(undefined);
 
 
-    const onEdit = async (product: IUser) => {
+    const onEdit = async (product: IPrescription) => {
         setMode(Actions.UPDATE);
         setShowNew(true);
         setEntity(product);
@@ -46,14 +46,14 @@ export default function UserListPage() {
         }
     };
 
-    const getConfirmation = (entity: IUser) => {
+    const getConfirmation = (entity: IPrescription) => {
         setShowConfirmation(true);
         setEntity(entity);
     }
     //delete
-    const onDelete = (entity: IUser) => {
+    const onDelete = (entity: IPrescription) => {
         if (!entity) return;
-        UserResource.remove(entity.id as any).then(() => {
+        PrescriptionResource.remove(entity.id as any).then(() => {
             deleteEntity(entity.id as any);
         })
     }
@@ -95,15 +95,10 @@ export default function UserListPage() {
                         {/* HEADER */}
                         <thead className="bg-gray-200 text-gray-700">
                             <tr>
-                                <th className="px-4 py-3 text-left border-b">Nombre</th>
-                                <th className="px-4 py-3 text-left border-b">Apellido Paterno</th>
-                                <th className="px-4 py-3 text-left border-b">Apellido Materno</th>
-                                <th className="px-4 py-3 text-left border-b">Telefono</th>
-                                <th className="px-4 py-3 text-left border-b">Gmail</th>
-                                <th className="px-4 py-3 text-left border-b">Fecha de Nacimiento</th>
-                                <th className="px-4 py-3 text-left border-b">Género</th>
-                                <th className="px-4 py-3 text-left border-b">Alergias</th>
-                                <th className="px-4 py-3 text-left border-b">Dueño de la cuenta</th>
+                                <th className="px-4 py-3 text-left border-b">Fecha</th>
+                                <th className="px-4 py-3 text-left border-b">Total</th>
+                                <th className="px-4 py-3 text-left border-b">Descripción</th>
+                                
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -116,31 +111,13 @@ export default function UserListPage() {
                                     className="border-b hover:bg-gray-50 transition"
                                 >
                                     <td className="px-4 py-3">
-                                        {entity.name}
+                                        {entity.date}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.last_name}
+                                        {entity.total??'--'}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.second_last_name}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.phone}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.email??'--'}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.birth_date}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.gender}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.allergies??'--'}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.account_owner ? 'Sí' : 'No'}
+                                        {entity.description}
                                     </td>
                                     <td className="px-4 py-3">
                                         <TableActions canDelete={true} canEdit={true} onDelete={() => getConfirmation(entity)} onEdit={() => onEdit(entity)} />
@@ -162,7 +139,7 @@ export default function UserListPage() {
                 )}
             </div>
             {showModalNew && (
-                <UserCreate
+                <PrescriptionCreate
                     isOpen={showModalNew}
                     mode={mode}
                     setIsOpen={setShowNew}
