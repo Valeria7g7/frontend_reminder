@@ -9,7 +9,11 @@ import type {  IUserProduct } from '../interface/UserProduct.interface';
 import { UserProductResource } from '../resources/UserProduct.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
 import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
+//importamos useNavigate
+import { useNavigate } from 'react-router-dom';
+import SearchTable from '@/core/genericComponents/SearchTable'
 export default function UserProductListPage() {
+    const navigate=useNavigate();
     const { onSearch, } = useUsersProductList();
     const entities = useUserProductStore((state) => state.entities);
     const isLoading = useUserProductStore((state) => state.isLoading);
@@ -77,8 +81,9 @@ export default function UserProductListPage() {
                         type="button"
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                         onClick={() => {
-                            setMode(Actions.CREATE);
-                            setShowNew(true);
+                            navigate('/users-product/create')
+                            /* setMode(Actions.CREATE);
+                            setShowNew(true); */
                         }}
                     >
                         + nuevo

@@ -242,6 +242,7 @@ export function useBaseList<T extends IEntity>
         onRestore,
         onSearch,
         paramsSearch,
+        setParamsSearch,
         onReset,
         onSelect
     }

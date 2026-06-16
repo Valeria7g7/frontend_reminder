@@ -9,8 +9,10 @@ import type { IUser } from '../interface/User.interface';
 import { UserResource } from '../resources/User.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
 import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
+import {SearchTable} from '@/core/genericComponents/SearchTable'
+
 export default function UserListPage() {
-    const { onSearch, } = useUsersList();
+    const { onSearch,onReset,paramsSearch } = useUsersList();
     const entities = useUserStore((state) => state.entities);
     const isLoading = useUserStore((state) => state.isLoading);
 
@@ -57,17 +59,15 @@ export default function UserListPage() {
             deleteEntity(entity.id as any);
         })
     }
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen text-gray-500 text-lg">
-                Cargando Usuarios...
-            </div>
-        );
-    }
 
     return (
         <div className="p-6 bg-gray-100 min-h-full">
             <div className="max-w-5xl mx-auto bg-white shadow-md rounded-xl p-6">
+                {isLoading && (
+                    <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-blue-700">
+                        Cargando usuarios...
+                    </div>
+                )}
 
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">
@@ -84,6 +84,12 @@ export default function UserListPage() {
                         + nuevo
                     </button>
                 </div>
+               <SearchTable 
+               paramsSearch={paramsSearch}
+               onSearch={onSearch}
+               onClear={onReset}
+               />
+            
 
 
 

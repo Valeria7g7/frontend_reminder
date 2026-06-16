@@ -34,7 +34,7 @@ apiClient.interceptors.response.use(
     try {
       const status = error.response?.status;
       const originalRequest = error.config;
-      if (status === 401 && (originalRequest._retry = true)) {
+      if (status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         const newAccessToken = await LoginResource.refresh()
         sessionStore.setState({ token: { access_token: newAccessToken } });

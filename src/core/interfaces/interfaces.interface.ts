@@ -9,7 +9,7 @@ export interface Filter {
 }
 export interface Search {
     value: string;
-    caseSensitive?: string[];
+    case_sensitive?: boolean;
 }
 export interface Sort {
     field: string;
