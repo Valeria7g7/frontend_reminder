@@ -2,32 +2,46 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {sessionStore} from '@/core/store/sessionStore';
+import type { AuthTokens } from '@/core/interfaces/session.interface';
+import type { ILoginResponse } from '../interface/Login.interface';
+import {useNavigate} from 'react-router-dom';
+import {useLogin} from '../hooks/useLogin';
 //importamos el recurso de login
 import LoginResource from '../resources/LoginResources';
 const Login: React.FC = () => {
+    const {login}=useLogin();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
             setError('Por favor completa todos los campos');
             return;
         }
-        console.log("datos", { email, password });
+    const res = await login(email, password);
+       if(res)navigate('/products');
+
+  /*       console.log("datos", { email, password });
         //logeamos con el recurso de login
         LoginResource.login({ email, password })
-            .then((data) => {
-                console.log('Login successful:', data);
+            .then((data : ILoginResponse) => {    
+            const authTokens: AuthTokens = {
+                    accessToken: data.token, 
+                }
+                sessionStore.getState().setProfile({user:data.user, abilities:[], roles:[]});
+                sessionStore.getState().setSession({ profile:{ user:data.user, abilities:[], roles:[]}, token: authTokens });
+              navigate('/products');
             })
             .catch((error) => {
                 console.error('Login failed:', error);
                 setError('Credenciales incorrectas');
-            });
+            }) */;
 
-        // Handle login logic here
-        console.log('Login attempt:', { email, password });
+       
     };
 
     return (
@@ -70,6 +84,9 @@ const Login: React.FC = () => {
                         <Button type="submit" className="w-full">
                             Ingresar
                         </Button>
+                          <a href="/register" className="text-blue-600 font-semibold hover:text-blue-800 transition">
+                            ¿No tienes cuenta? Regístrate aquí
+                        </a>
                     </form>
                 </CardContent>
             </Card>

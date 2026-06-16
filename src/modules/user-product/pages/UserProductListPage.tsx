@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { UserCreate } from '../components/UserCreate';
+import { UserProductCreate } from '../components/UserProductCreate';
 import { Actions } from '@/interfaces/general.interface';
-import { useUserStore } from '../store/user.store';
-import { useUsersList } from '../hooks/useUsersList';
+import { useUserProductStore } from '../store/userProduct.store';
+import { useUsersProductList } from '../hooks/useUsersProductList';
 //import { TableActions } from '@/core/genericComponents/TableActions';
 import { TableActions } from '@/core/genericComponents/TableActions';
-import type { IUser } from '../interface/User.interface';
-import { UserResource } from '../resources/User.resource';
+import type {  IUserProduct } from '../interface/UserProduct.interface';
+import { UserProductResource } from '../resources/UserProduct.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
 import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
-export default function UserListPage() {
-    const { onSearch, } = useUsersList();
-    const entities = useUserStore((state) => state.entities);
-    const isLoading = useUserStore((state) => state.isLoading);
+export default function UserProductListPage() {
+    const { onSearch, } = useUsersProductList();
+    const entities = useUserProductStore((state) => state.entities);
+    const isLoading = useUserProductStore((state) => state.isLoading);
 
 
-    const deleteEntity = useUserStore((state) => state.deleteEntity);
+    const deleteEntity = useUserProductStore((state) => state.deleteEntity);
 
 
     const [showModalNew, setShowNew] = useState(false);
@@ -23,10 +23,10 @@ export default function UserListPage() {
 
     //para mandar el mode
     const [mode, setMode] = useState<string>(Actions.CREATE);
-    const [entity, setEntity] = useState<IUser | undefined>(undefined);
+    const [entity, setEntity] = useState<IUserProduct | undefined>(undefined);
 
 
-    const onEdit = async (product: IUser) => {
+    const onEdit = async (product: IUserProduct) => {
         setMode(Actions.UPDATE);
         setShowNew(true);
         setEntity(product);
@@ -46,14 +46,14 @@ export default function UserListPage() {
         }
     };
 
-    const getConfirmation = (entity: IUser) => {
+    const getConfirmation = (entity: IUserProduct) => {
         setShowConfirmation(true);
         setEntity(entity);
     }
     //delete
-    const onDelete = (entity: IUser) => {
+    const onDelete = (entity: IUserProduct) => {
         if (!entity) return;
-        UserResource.remove(entity.id as any).then(() => {
+        UserProductResource.remove(entity.id as any).then(() => {
             deleteEntity(entity.id as any);
         })
     }
@@ -71,7 +71,7 @@ export default function UserListPage() {
 
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">
-                        Usuarios
+                        Productos Usuarios
                     </h1>
                     <button
                         type="button"
@@ -95,15 +95,13 @@ export default function UserListPage() {
                         {/* HEADER */}
                         <thead className="bg-gray-200 text-gray-700">
                             <tr>
-                                <th className="px-4 py-3 text-left border-b">Nombre</th>
-                                <th className="px-4 py-3 text-left border-b">Apellido Paterno</th>
-                                <th className="px-4 py-3 text-left border-b">Apellido Materno</th>
-                                <th className="px-4 py-3 text-left border-b">Telefono</th>
-                                <th className="px-4 py-3 text-left border-b">Gmail</th>
-                                <th className="px-4 py-3 text-left border-b">Fecha de Nacimiento</th>
-                                <th className="px-4 py-3 text-left border-b">Género</th>
-                                <th className="px-4 py-3 text-left border-b">Alergias</th>
-                                <th className="px-4 py-3 text-left border-b">Dueño de la cuenta</th>
+                                <th className="px-4 py-3 text-left border-b">Usuario</th>
+                                <th className="px-4 py-3 text-left border-b">Producto</th>
+                                <th className="px-4 py-3 text-left border-b">Cuantos dias</th>
+                                <th className="px-4 py-3 text-left border-b">Cada cuantas horas</th>
+                                <th className="px-4 py-3 text-left border-b">Primera toma</th>
+                            {/*     <th className="px-4 py-3 text-left border-b">Alergias</th> */}
+                                
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -116,31 +114,19 @@ export default function UserListPage() {
                                     className="border-b hover:bg-gray-50 transition"
                                 >
                                     <td className="px-4 py-3">
-                                        {entity.name}
+                                        {entity.user?.name}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.last_name}
+                                        {entity.product?.name}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.second_last_name}
+                                        {entity.how_days}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.phone}
+                                        {entity.how_often}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.email??'--'}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.birth_date}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.gender=='female'?'Mujer':'Hombre'}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.allergies??'--'}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        {entity.account_owner ? 'Sí' : 'No'}
+                                        {entity.first_take}
                                     </td>
                                     <td className="px-4 py-3">
                                         <TableActions canDelete={true} canEdit={true} onDelete={() => getConfirmation(entity)} onEdit={() => onEdit(entity)} />
@@ -162,7 +148,7 @@ export default function UserListPage() {
                 )}
             </div>
             {showModalNew && (
-                <UserCreate
+                <UserProductCreate
                     isOpen={showModalNew}
                     mode={mode}
                     setIsOpen={setShowNew}

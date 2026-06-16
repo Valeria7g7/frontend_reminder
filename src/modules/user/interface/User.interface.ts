@@ -6,5 +6,8 @@ export interface IUser {
     phone?: string;
     email?: string;
     account_owner?: boolean;
+    birth_date?: string;
+    gender?: string;
+    allergies?: string;
     [key: string]: unknown;
 }
