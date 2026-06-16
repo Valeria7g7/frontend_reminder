@@ -5,6 +5,7 @@ import { useUserStore } from "@/modules/user/store/user.store";
 import { FormUser } from "@/modules/user/components/FormUser";
 import type { IUser} from "@/modules/user/interface/User.interface";
 import { UserResource } from "@/modules/user/resources/User.resource";
+import LoginResource from '../resources/LoginResources';
 import { useNavigate } from "react-router-dom";
 export const Register = () => {
     const navigate=useNavigate();
@@ -14,7 +15,7 @@ export const Register = () => {
     const onSubmit = async (data: IUser) => {
         setLoading(true);
         try {
-                const createdUser = await UserResource.create(data);
+                const createdUser = await LoginResource.register(data);
                 console.log("logeaoo    al nuevo user: ", createdUser);
               //  addEntity(createdUser as IUser);
               //y aqui logeamos al nuevo user y lo mandamos a su cuenta

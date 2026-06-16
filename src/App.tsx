@@ -123,8 +123,11 @@ export default App
 
 
 import AppRoutes from "./routes/AppRoutes";
+import { RestoreSession } from "./modules/login/components/RestoreSession";
 function App(){
-  return <AppRoutes />
+  return <RestoreSession> 
+    <AppRoutes />
+    </RestoreSession>
 }
 
 export default App;

@@ -12,5 +12,6 @@ export interface ILogin {
 
 export interface ILoginResponse {
    user: IUser;
-    token: string;
+    acces_token: string;
+    refresh_token: string;
 }

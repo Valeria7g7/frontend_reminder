@@ -13,8 +13,8 @@ export interface ISessionProfile{
 
 }
 export interface AuthTokens{
-    accessToken:string;
-    refreshTocken?:string;
+    access_token:string;
+    refresh_Tocken?:string;
 }
 export interface PersistedSession{
     profile?:ISessionProfile|null;

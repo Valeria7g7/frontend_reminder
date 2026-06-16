@@ -5,17 +5,15 @@ import { sessionStore } from '@/core/store/sessionStore';
 
 export const RestoreSession=({children}:PropsWithChildren):JSX.Element=>{
  const {restore,logout,validate,isRestoring}=useLogin();
- const restoreSession=async()=>{
+/*  const restoreSession=async()=>{
     restore();
-
-
- }
+ } */
  useEffect(()=>{
-    restoreSession()
-    const currentState=sessionStore.getState();
-    if(currentState.token?.accessToken){
+   // restoreSession()
+    /* const currentState=sessionStore.getState();
+    if(currentState.token?.access_token){
         validate();
-    }
+    } */
 
 
  },[restore,logout])

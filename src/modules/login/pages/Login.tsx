@@ -16,14 +16,15 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
             setError('Por favor completa todos los campos');
             return;
         }
-        login(email,password);
-        navigate('/products');
+    const res = await login(email, password);
+       if(res)navigate('/products');
+
   /*       console.log("datos", { email, password });
         //logeamos con el recurso de login
         LoginResource.login({ email, password })

@@ -134,7 +134,7 @@ export default function UserListPage() {
                                         {entity.birth_date}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {entity.gender}
+                                        {entity.gender=='female'?'Mujer':'Hombre'}
                                     </td>
                                     <td className="px-4 py-3">
                                         {entity.allergies??'--'}
