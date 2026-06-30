@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
-//import { UserProductCreate } from '../components/UserProductCreate';
 import { Actions } from '@/interfaces/general.interface';
 import { useUserProductStore } from '../store/userProduct.store';
 import { useUsersProductList } from '../hooks/useUsersProductList';
-//import { TableActions } from '@/core/genericComponents/TableActions';
 import { TableActions } from '@/core/genericComponents/TableActions';
 import type {  IUserProduct } from '../interface/UserProduct.interface';
 import { UserProductResource } from '../resources/UserProduct.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
 import { NoData } from '@/core/genericComponents/NoData';
-//importamos useNavigate
 import { useNavigate } from 'react-router-dom';
 import SearchTable from '@/core/genericComponents/SearchTable'
 export default function UserProductListPage() {
