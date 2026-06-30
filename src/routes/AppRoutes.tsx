@@ -6,7 +6,7 @@ import UserListPage from "@/modules/user/pages/UserListPage";
 import { Register } from "@/modules/login/pages/Register";  
 import UserProductListPage from "@/modules/user-product/pages/UserProductListPage";
 import UserProductCreatePage  from "@/modules/user-product/pages/UserProductCreatePage";
-
+import TaskListPage from "@/modules/task/pages/TaskListPage";
 const AppRoutes = () => {
   return (
     <BrowserRouter>
@@ -20,6 +20,7 @@ const AppRoutes = () => {
       <Route path="/users-product" element={<UserProductListPage />} />
       <Route path="/users-product/create" element={<UserProductCreatePage />} />
       <Route path="/users/createaccount" element={<ProductListPage />} />
+      <Route path="/task" element={<TaskListPage />} />
        </Route>
     </Routes>
   </BrowserRouter>

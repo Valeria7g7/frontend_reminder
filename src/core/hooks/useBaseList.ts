@@ -1,10 +1,11 @@
 import { ca } from "zod/v4/locales";
 import type { ISearchParams, UseBaseListConfig ,IEntity, IOverridesParams} from "../interfaces/interfaces.interface";
-import { useCallback, useState } from "react";
+import { useCallback, useState ,useEffect} from "react";
 
 //creamos el hook base list con sus metodos genericos
 export function useBaseList<T extends IEntity>
 (config:UseBaseListConfig<T>){
+  const autoInit=config.autoInit;
     const store=config.store();
     const initialSearch=config.initialSearch || {};
     const [paramsSearch,setParamsSearch]=useState<ISearchParams>(config.initialSearch || {});
@@ -56,10 +57,12 @@ export function useBaseList<T extends IEntity>
 
     //ahora si las funciones para consumir apis
     const getList=useCallback(//memorizala funcion para que no se vuelva a crear en cada renderizado
+      
         async(
             paramsOverride?:IOverridesParams,
             searchOverride?:ISearchParams
         )=>{
+          console.log("ejecutando getlist")
             store.setLoading(true);
             try{
                 const params=buildParams(paramsOverride,searchOverride);
@@ -141,6 +144,7 @@ export function useBaseList<T extends IEntity>
      // Search
   const onSearch = useCallback(
     (search?: Partial<ISearchParams>) => {
+      console.log("ejecutando onSearch")
       //agg
       setParamsSearch((prev) => {
         // Mergear con los parámetros iniciales para preservarlos
@@ -178,6 +182,7 @@ export function useBaseList<T extends IEntity>
   ); //agg initialSearch
  // Select
   const onSelect = useCallback(async () => {
+    console.log("ejecutando onSelect")
     const response = await config.resource.select('created_at');
     const entityName = config.resource.getEntityName();
     return response?.[entityName] || [];
@@ -235,7 +240,12 @@ export function useBaseList<T extends IEntity>
             id:entity.id} as Partial<T>);
         
     },[config.resource,store]);
-
+ // Auto init
+  useEffect(() => {
+    if (config.autoInit !== false) {
+      getList();
+    }
+  }, []);
     return {
         onPageChanged,
         onRemove,

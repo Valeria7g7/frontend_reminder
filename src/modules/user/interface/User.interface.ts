@@ -1,4 +1,6 @@
-export interface IUser { 
+import type { IEntity } from "@/core/interfaces/interfaces.interface";
+
+export interface IUser extends IEntity { 
     id?: number;
     name: string;
     last_name: string;

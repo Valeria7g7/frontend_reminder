@@ -3,16 +3,21 @@ import { UserCreate } from '../components/UserCreate';
 import { Actions } from '@/interfaces/general.interface';
 import { useUserStore } from '../store/user.store';
 import { useUsersList } from '../hooks/useUsersList';
-//import { TableActions } from '@/core/genericComponents/TableActions';
 import { TableActions } from '@/core/genericComponents/TableActions';
 import type { IUser } from '../interface/User.interface';
 import { UserResource } from '../resources/User.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
-import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
+import { NoData } from '@/core/genericComponents/NoData';
 import {SearchTable} from '@/core/genericComponents/SearchTable'
+import { LoadingComponent } from '@/core/genericComponents/LoadingComponent';
+export type Props={
+    autoInit?:boolean,
+    userSelected?:IUser|null,
+    setUserSelected?: (userSelected: IUser|null) => void;
 
-export default function UserListPage() {
-    const { onSearch,onReset,paramsSearch } = useUsersList();
+}
+export default function UserListPage({autoInit,userSelected,setUserSelected}:Props) {
+    const { onSearch,onReset,paramsSearch } = useUsersList(autoInit);
     const entities = useUserStore((state) => state.entities);
     const isLoading = useUserStore((state) => state.isLoading);
 
@@ -33,21 +38,6 @@ export default function UserListPage() {
         setShowNew(true);
         setEntity(product);
     }
-    useEffect(() => {
-        fetchProducts();
-
-    }, []);
-
-    const fetchProducts = async () => {
-        try {
-            onSearch();
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        } finally {
-
-        }
-    };
-
     const getConfirmation = (entity: IUser) => {
         setShowConfirmation(true);
         setEntity(entity);
@@ -59,15 +49,26 @@ export default function UserListPage() {
             deleteEntity(entity.id as any);
         })
     }
+    //onSelect 
+    //const [userSelected,setUserSelected]=useState<IUser|null>();
+    const onSelect = (user: IUser) => {
+        if (!setUserSelected) return;
+
+        if (userSelected) {
+            setUserSelected(null);
+        } else {
+            setUserSelected(user);
+        }
+
+        console.log("user seleccionado ", user);
+    }
 
     return (
         <div className="p-6 bg-gray-100 min-h-full">
             <div className="max-w-5xl mx-auto bg-white shadow-md rounded-xl p-6">
-                {isLoading && (
-                    <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-blue-700">
-                        Cargando usuarios...
-                    </div>
-                )}
+                  {isLoading &&(
+                            <LoadingComponent text="Usuarios"/>
+                        )}
 
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">
@@ -84,17 +85,13 @@ export default function UserListPage() {
                         + nuevo
                     </button>
                 </div>
+                <div className="mb-8">
                <SearchTable 
                paramsSearch={paramsSearch}
                onSearch={onSearch}
                onClear={onReset}
                />
-            
-
-
-
-
-
+               </div>
                 <div className="overflow-x-auto">
                     <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
 
@@ -119,7 +116,8 @@ export default function UserListPage() {
                             {entities.map((entity) => (
                                 <tr
                                     key={entity.id}
-                                    className="border-b hover:bg-gray-50 transition"
+                                    className={`border-b hover:bg-gray-50 transition ${entity.id==userSelected?.id?'bg-blue-300':''}`}
+                                    onClick={()=>onSelect(entity)}
                                 >
                                     <td className="px-4 py-3">
                                         {entity.name}
@@ -162,7 +160,7 @@ export default function UserListPage() {
                 </div>
                 {entities.length === 0 && (
                     <div className="border border-border rounded-lg p-6">
-                        <NoDataRegister />
+                        <NoData />
                     </div>
 
                 )}

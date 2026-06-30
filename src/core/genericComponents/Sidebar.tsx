@@ -35,6 +35,9 @@ export const Sidebar=()=>{
          <Link to="/users-product" className="px-3 py-2 rounded hover:bg-pink-600 transition text-black text-lg font-bold">
           User Products
         </Link>
+          <Link to="/task" className="px-3 py-2 rounded hover:bg-pink-600 transition text-black text-lg font-bold">
+          Tareas
+        </Link>
         <Link to="/"  onClick={logout} className="px-3 py-2  mt-auto rounded hover:bg-red-100 transition text-red-600 font-bold">
          <div className="flex"> Cerrar Sesión
            < Power className="ml-2" /></div>
