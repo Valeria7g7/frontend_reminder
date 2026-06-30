@@ -9,7 +9,7 @@ export interface Filter {
 }
 export interface Search {
     value: string;
-    caseSensitive?: string[];
+    case_sensitive?: boolean;
 }
 export interface Sort {
     field: string;
@@ -44,6 +44,9 @@ export type EntityId = string | number;
 
 export interface IEntity {
     id?: EntityId;
+    created_at?:string;
+    deleted_at?:string;
+    updated_at?:string
 }
 /* type Pagination = { page: number; limit: number; total: number }; */
 export interface IPagination {

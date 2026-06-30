@@ -1,54 +1,60 @@
 import { useEffect, useState } from 'react';
-import { ProductCreate } from '../components/ProductCreate';
+import { TaskCreate } from '../components/TaskCreate';
 import { Actions } from '@/interfaces/general.interface';
-import { useProductStore } from '../store/product.store';   
-import { useProductsList } from '../hooks/useProductsList';
+import { useTaskStore } from '../store/task.store';   
+
+import { useTasksList } from '../hooks/useTaskList';
 import { TableActions } from '@/core/genericComponents/TableActions';
-import type { IProduct } from '../interface/Product.interface';
-import {ProductResource} from '../resources/Product.resource';
+import type { ITask } from '../interface/task.interface';
+import {TaskResource} from '../resources/Task.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
 import {SearchTable} from '@/core/genericComponents/SearchTable'
 import { LoadingComponent } from '@/core/genericComponents/LoadingComponent';
 import { NoData } from '@/core/genericComponents/NoData';
-export type Props = {
-    autoInit?: boolean,
-    i?: number
-    setValue?:any
-    productSelected?:IProduct|null,
-    setProductSelected?:(product:IProduct|null)=>void;
-}
-export default function ProductListPage({autoInit,i,setValue,productSelected,setProductSelected}:Props) {
-    const { onSearch,paramsSearch,onReset} = useProductsList(autoInit);
-    const entities= useProductStore((state)=>state.entities);
-    const isLoading= useProductStore((state)=>state.isLoading);
+export default function TaskListPage() {
+    const { onSearch,paramsSearch,onReset} = useTasksList(true);
+    const entities= useTaskStore((state)=>state.entities);
+    const isLoading= useTaskStore((state)=>state.isLoading);
     
-    const deleteEntity= useProductStore((state)=>state.deleteEntity);
-    
+    const deleteEntity= useTaskStore((state)=>state.deleteEntity);
+
   
-    const [showModalNewProduct, setShowNewProduct] = useState(false);
+    const [showModalNewTask, setShowNewTask] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     
     //para mandar el mode
     const [mode, setMode] = useState<String>(Actions.CREATE);
-    const [entity,setEntity]=useState<IProduct|undefined>(undefined);
+    const [entity,setEntity]=useState<ITask|undefined>(undefined);
 
 
-    const onEdit=async(product:IProduct)=>{
+    const onEdit=async(product:ITask)=>{
          setMode(Actions.UPDATE);
-         setShowNewProduct(true);
+         setShowNewTask(true);
          setEntity(product);
     }
+   /*  useEffect(() => {
+        fetchProducts();
+        
+    }, []); */
 
- 
+    /* const fetchProducts = async () => {
+        try {
+            onSearch();
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        } finally {
+         
+        }
+    }; */
 
-const getConfirmation=(entity:IProduct)=>{
+const getConfirmation=(entity:ITask)=>{
     setShowConfirmation(true);
     setEntity(entity);
 }
     //delete
-    const onDelete=(entity:IProduct)=>{
+    const onDelete=(entity:ITask)=>{
         if(!entity )return;
-        ProductResource.remove(entity.id as any).then(()=>{
+        TaskResource.remove(entity.id as any).then(()=>{
             deleteEntity(entity.id as any); 
         })
     }
@@ -63,14 +69,14 @@ const getConfirmation=(entity:IProduct)=>{
 
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">
-                        Productos
+                        Tareas
                     </h1>
                     <button
                         type="button"
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                         onClick={() => {
                             setMode(Actions.CREATE);
-                            setShowNewProduct(true);
+                            setShowNewTask(true);
                         }}
                     >
                         + nuevo
@@ -95,7 +101,6 @@ const getConfirmation=(entity:IProduct)=>{
                             <tr>
                                 <th className="px-4 py-3 text-left border-b">Name</th>
                                 <th className="px-4 py-3 text-left border-b">Description</th>
-                                <th className="px-4 py-3 text-left border-b">Price</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -106,24 +111,14 @@ const getConfirmation=(entity:IProduct)=>{
                                 <tr
                                     key={product.id}
                                     className="border-b hover:bg-gray-50 transition"
-                                    
-onClick={() => {
-setValue?setValue(`products.${i}.product_id`, product.id):{};
-setValue?setValue(`products.${i}.product`, product):{};
-setValue?setValue(`products.${i}.openProductList`, false):{};
-
-  setProductSelected?  setProductSelected(product):{}
-
-}}                                >
+                                >
                                     <td className="px-4 py-3">
                                         {product.name}
                                     </td>
                                     <td className="px-4 py-3">
                                         {product.description ?? '—'}
                                     </td>
-                                    <td className="px-4 py-3 font-semibold text-green-600">
-                                        ${product.price}
-                                    </td>
+                                    
                                     <td className="px-4 py-3">
                                             <TableActions canDelete={true} canEdit={true} onDelete={() =>getConfirmation(product)}   onEdit={() => onEdit(product)} />
                                        
@@ -141,18 +136,18 @@ setValue?setValue(`products.${i}.openProductList`, false):{};
                 
                                 )}
             </div>
-            {showModalNewProduct && (
-                <ProductCreate 
-                 isOpen={showModalNewProduct}
+            {showModalNewTask && (
+                <TaskCreate 
+                 isOpen={showModalNewTask}
                  mode ={mode}
-                 setIsOpen={setShowNewProduct} 
-                 onClose={() => setShowNewProduct(false)} 
+                 setIsOpen={setShowNewTask} 
+                 onClose={() => setShowNewTask(false)} 
                  entity={entity}
                  />
             )}
        {showConfirmation &&(
         <MessageConfirmation
-        message="¿Estás seguro de que deseas eliminar este producto?"
+        message="¿Estás seguro de que deseas eliminar esta tarea?"
         onConfirm={()=>{
             if(entity)onDelete(entity);
             setShowConfirmation(false);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { UserProductCreate } from '../components/UserProductCreate';
+//import { UserProductCreate } from '../components/UserProductCreate';
 import { Actions } from '@/interfaces/general.interface';
 import { useUserProductStore } from '../store/userProduct.store';
 import { useUsersProductList } from '../hooks/useUsersProductList';
@@ -8,8 +8,12 @@ import { TableActions } from '@/core/genericComponents/TableActions';
 import type {  IUserProduct } from '../interface/UserProduct.interface';
 import { UserProductResource } from '../resources/UserProduct.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
-import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
+import { NoData } from '@/core/genericComponents/NoData';
+//importamos useNavigate
+import { useNavigate } from 'react-router-dom';
+import SearchTable from '@/core/genericComponents/SearchTable'
 export default function UserProductListPage() {
+    const navigate=useNavigate();
     const { onSearch, } = useUsersProductList();
     const entities = useUserProductStore((state) => state.entities);
     const isLoading = useUserProductStore((state) => state.isLoading);
@@ -27,24 +31,17 @@ export default function UserProductListPage() {
 
 
     const onEdit = async (product: IUserProduct) => {
-        setMode(Actions.UPDATE);
-        setShowNew(true);
-        setEntity(product);
+       /*  navigate('/users-product/create',{state:{productId:product.id}}); */
+  navigate('/users-product/create', {
+        state: {
+        id: product.id,
+        mode: Actions.UPDATE
     }
-    useEffect(() => {
-        fetchProducts();
-
-    }, []);
-
-    const fetchProducts = async () => {
-        try {
-            onSearch();
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        } finally {
-
-        }
-    };
+    });
+        /* setMode(Actions.UPDATE);
+        setShowNew(true);
+        setEntity(product); */
+    }
 
     const getConfirmation = (entity: IUserProduct) => {
         setShowConfirmation(true);
@@ -77,8 +74,8 @@ export default function UserProductListPage() {
                         type="button"
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                         onClick={() => {
-                            setMode(Actions.CREATE);
-                            setShowNew(true);
+                            navigate('/users-product/create')
+                            
                         }}
                     >
                         + nuevo
@@ -97,9 +94,9 @@ export default function UserProductListPage() {
                             <tr>
                                 <th className="px-4 py-3 text-left border-b">Usuario</th>
                                 <th className="px-4 py-3 text-left border-b">Producto</th>
-                                <th className="px-4 py-3 text-left border-b">Cuantos dias</th>
+                               {/*  <th className="px-4 py-3 text-left border-b">Cuantos dias</th>
                                 <th className="px-4 py-3 text-left border-b">Cada cuantas horas</th>
-                                <th className="px-4 py-3 text-left border-b">Primera toma</th>
+                                <th className="px-4 py-3 text-left border-b">Primera toma</th> */}
                             {/*     <th className="px-4 py-3 text-left border-b">Alergias</th> */}
                                 
                                 <th>Actions</th>
@@ -116,7 +113,11 @@ export default function UserProductListPage() {
                                     <td className="px-4 py-3">
                                         {entity.user?.name}
                                     </td>
+                                    
                                     <td className="px-4 py-3">
+                                        {entity.products?.map(p=>p.product.name).join(', ')}
+                                    </td>
+                                   {/*  <td className="px-4 py-3">
                                         {entity.product?.name}
                                     </td>
                                     <td className="px-4 py-3">
@@ -127,10 +128,12 @@ export default function UserProductListPage() {
                                     </td>
                                     <td className="px-4 py-3">
                                         {entity.first_take}
-                                    </td>
+                                    </td> */}
+
+
                                     <td className="px-4 py-3">
                                         <TableActions canDelete={true} canEdit={true} onDelete={() => getConfirmation(entity)} onEdit={() => onEdit(entity)} />
-
+                                    {/* Aqui metemos un boton de detalles */}
                                     </td>
                                 </tr>
                             ))}
@@ -142,12 +145,12 @@ export default function UserProductListPage() {
                 </div>
                 {entities.length === 0 && (
                     <div className="border border-border rounded-lg p-6">
-                        <NoDataRegister />
+                        <NoData />
                     </div>
 
                 )}
             </div>
-            {showModalNew && (
+         {/*    {showModalNew && (
                 <UserProductCreate
                     isOpen={showModalNew}
                     mode={mode}
@@ -155,7 +158,7 @@ export default function UserProductListPage() {
                     onClose={() => setShowNew(false)}
                     entity={entity}
                 />
-            )}
+            )} */}
             {showConfirmation && (
                 <MessageConfirmation
                     message="¿Estás seguro de que deseas eliminar este usuario?"

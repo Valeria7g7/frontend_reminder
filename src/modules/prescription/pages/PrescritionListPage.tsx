@@ -8,7 +8,7 @@ import { TableActions } from '@/core/genericComponents/TableActions';
 import type { IPrescription } from '../interface/Prescription.interface';
 import { PrescriptionResource } from '../resources/Prescription.resource';
 import { MessageConfirmation } from '@/core/genericComponents/MessageConfirmation';
-import { NoDataRegister } from '@/core/genericComponents/NoDataRegister';
+import { NoData } from '@/core/genericComponents/NoData';
 export default function PrescriptionListPage() {
     const { onSearch, } = usePrescriptionsList();
     const entities = usePrescriptionStore((state) => state.entities);
@@ -133,7 +133,7 @@ export default function PrescriptionListPage() {
                 </div>
                 {entities.length === 0 && (
                     <div className="border border-border rounded-lg p-6">
-                        <NoDataRegister />
+                        <NoData />
                     </div>
 
                 )}
